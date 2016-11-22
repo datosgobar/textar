@@ -1,0 +1,5 @@
+id1	Este es un texto de prueba.
+id2	Este es otro texto de prueba.
+id3	Algo muy distinto que nada tiene que ver.
+id4	Mucho mas alejado es esto; remotísimo, podría decirse.
+id5	Este es otro texto de prueba que se vuelve a parecer.

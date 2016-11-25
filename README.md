@@ -26,7 +26,7 @@ Paquete en python para análisis, clasificación y recuperación de textos, util
 
 ## Instalación
 
-Para uso normal: `pin install textar`
+Para uso normal: `pip install textar`
 
 Para desarrollo:
 

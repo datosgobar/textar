@@ -3,17 +3,10 @@ u"""Módulo de clasificación de textos.
 
 Este módulo contiene a los objetos que permiten entrenar un clasificador
 automático de textos y pedir sugerencias de textos similares.
-
-Example:
-    Examples can be given using either the ``Example`` or ``Examples``
-    sections. Sections support any reStructuredText formatting, including
-    literal blocks::
-
-        $ python example_google.py
-Todo:
-    * For module TODOs
 """
+
 from __future__ import unicode_literals
+
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.linear_model import SGDClassifier
@@ -58,7 +51,7 @@ class TextClassifier():
             vocabulary=vocabulary, binary=False)
 
         self.transformer = TfidfTransformer()
-        self.ids = None # Matiene una lista ordenada de ids de textos.
+        self.ids = None  # Matiene una lista ordenada de ids de textos.
         self.term_mat = None  # Matriz que cuenta los terminos en un texto.
         self.tfidf_mat = None  # Matriz de relevancia de los terminos.
         self.reload_texts(texts, ids)
@@ -71,6 +64,8 @@ class TextClassifier():
 
     def make_classifier(self, name, ids, labels):
         """Entrenar un clasificador SVM sobre los textos cargados.
+
+        Crea un clasificador que se guarda en el objeto bajo el nombre `name`.
 
         Args:
             name (str): Nombre para el clasidicador.
@@ -129,6 +124,13 @@ class TextClassifier():
                 medida de cuan buenas son las etiquetas.
         Nota:
             Usa el clasificador de `Scikit-learn <http://scikit-learn.org/>`_
+
+        Returns:
+            tuple (array, array): (labels_considerados, puntajes)
+                labels_considerados: Las etiquetas que se consideraron para
+                    clasificar.
+                puntajes: Cuanto más alto el puntaje, más probable es que la
+                    etiqueta considerada sea la adecuada.
         """
         classifier = getattr(self, classifier_name)
         texts_vectors = self._make_text_vectors(examples)
@@ -163,6 +165,7 @@ class TextClassifier():
                                   de textos almacenados o todos textos planos")
         else:
             raise TypeError("Los ejemplos no son del tipo de dato adecuado.")
+
         return textvec
 
     def get_similar(self, example, max_similars=3, similarity_cutoff=None,
@@ -186,12 +189,14 @@ class TextClassifier():
                 que se devuelven en best_words).
 
         Returns:
-            text_ids (list of str): Devuelve los ids de los textos sugeridos.
-            sorted_dist (list of float): Devuelve la distancia entre las
-                opciones sugeridas y el ejemplo dado como entrada.
-            best_words (list of list): Para cada sugerencia devuelve las
-                palabras mas relevantes que se usaron para seleccionar esa
-                sugerencia.
+            tuple (list, list, list): (text_ids, sorted_dist, best_words)
+                text_ids (list of str): Devuelve los ids de los textos
+                    sugeridos.
+                sorted_dist (list of float): Devuelve la distancia entre las
+                    opciones sugeridas y el ejemplo dado como entrada.
+                best_words (list of list): Para cada sugerencia devuelve las
+                    palabras mas relevantes que se usaron para seleccionar esa
+                    sugerencia.
         """
         if max_similars > self.term_mat.shape[0]:
             raise ValueError("No se pueden pedir mas sugerencias que la \
@@ -218,17 +223,17 @@ class TextClassifier():
         best_words = []
         exmpl_vec = exmpl_vec.toarray()
         for suggested in closest_n:
-            test_vec = self.tfidf_mat[suggested,:].toarray()
+            test_vec = self.tfidf_mat[suggested, :].toarray()
             differences = np.abs(exmpl_vec - test_vec)**2 / \
-                            (exmpl_vec**2 + test_vec**2)
+                (exmpl_vec**2 + test_vec**2)
             differences = np.squeeze(np.array(differences))
             sort_I = np.argsort(differences)
-            limit = np.flatnonzero((differences[sort_I] > term_diff_cutoff) \
+            limit = np.flatnonzero((differences[sort_I] > term_diff_cutoff)
                                    | (np.isnan(differences[sort_I]))
                                    )[0]
-            best_words.append([k for k,v in
+            best_words.append([k for k, v in
                                self.vectorizer.vocabulary_.iteritems()
-                                if v in sort_I[:limit]])
+                               if v in sort_I[:limit]])
         text_ids = self.ids[closest_n]
         return list(text_ids), list(sorted_dist), best_words
 
@@ -248,7 +253,7 @@ class TextClassifier():
         self.ids = np.array(sorted(ids))
         if vocabulary:
             self.vectorizer.vocabulary = vocabulary
-        sorted_texts = [x for (y,x) in sorted(zip(ids,texts))]
+        sorted_texts = [x for (y, x) in sorted(zip(ids, texts))]
         self.term_mat = self.vectorizer.fit_transform(sorted_texts)
         self._update_tfidf()
 

@@ -133,14 +133,19 @@ print sorted(zip(puntajes[1], labels_considerados), reverse=True)
  (-6.5561947275785393, 'Postre')]
 ```
 
-
 ## Tests
 
-*AYUDA: ¿Cómo correr los tests? ¿Cómo me instalo dependencias para los tests?*
+Los tests sólo se pueden correr habiendo clonado el repo. Luego instalar las dependencias de desarrollo:
+
+`pip install -r requirements_dev.txt`
+
+y correr los tests:
+
+`nosetests`
 
 ## Créditos
 
-*AYUDA: ¿Usás código de otra persona/organización? ¿Alguien o algo fue una fuente de inspiración/asesoramiento/ayuda para este repositorio? ¿Es esto un fork?*
+* [Victor Lavrenko](http://homepages.inf.ed.ac.uk/vlavrenk/) nos ayudó a entender el problema con sus explicaciones en youtube: https://www.youtube.com/user/victorlavrenko
 
 ## Contacto
 

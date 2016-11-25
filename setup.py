@@ -17,7 +17,7 @@ with open("requirements_dev.txt") as f:
 
 setup(
     name='textar',
-    version='0.0.3',
+    version='0.0.4',
     description="Paquete en python para análisis, clasificación y recuperación de textos, utilizado por el equipo de Datos Argentina.",
     long_description=readme + '\n\n' + history,
     author="Datos Argentina",

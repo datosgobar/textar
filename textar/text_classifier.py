@@ -58,9 +58,8 @@ class TextClassifier():
 
     def __str__(self):
         """Representacion en str del objeto."""
-        string = """ Clasificador de textos con {:d} textos almacenados, \
-        """.format(len(self.ids))
-        return string
+        base_string = """Clasificador de textos con {:d} textos almacenados"""
+        return base_string.format(len(self.ids))
 
     def make_classifier(self, name, ids, labels):
         """Entrenar un clasificador SVM sobre los textos cargados.

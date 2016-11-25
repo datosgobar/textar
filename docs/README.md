@@ -10,7 +10,6 @@ Paquete en python para análisis, clasificación y recuperación de textos, util
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Instalación](#instalaci%C3%B3n)
   - [Dependencias](#dependencias)

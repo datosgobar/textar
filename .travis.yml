@@ -11,6 +11,7 @@ deploy:
   provider: pypi
   user: datosgobar
 install:
+- sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran
 - pip install -r requirements.txt
 - pip install -r requirements_dev.txt
 - pip install python-coveralls

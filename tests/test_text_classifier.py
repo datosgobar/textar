@@ -6,7 +6,7 @@ import codecs
 import numpy as np
 from sklearn.cross_validation import train_test_split
 sys.path.insert(0, os.path.abspath('..'))
-from text_classifier import TextClassifier
+from textar import TextClassifier
 
 
 class TestTextClassifier(unittest.TestCase):

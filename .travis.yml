@@ -25,5 +25,5 @@ matrix:
 python:
 - '2.7'
 script:
-- nosetests --with-coverage --cover-package=pydatajson
+- nosetests --with-coverage --cover-package=textar
 sudo: true

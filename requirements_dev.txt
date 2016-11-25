@@ -10,3 +10,4 @@ cryptography==1.4
 PyYAML==3.11
 recommonmark
 twine
+sphinx_rtd_theme

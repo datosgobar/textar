@@ -1,4 +1,4 @@
-Welcome to Analizador de Textos's documentation!
+Bienvenido a la documentación del Analizador de Textos
 ======================================
 
 Contents:
@@ -7,12 +7,9 @@ Contents:
    :maxdepth: 2
 
    README.md
-   installation
-   usage
-   contributing
    HISTORY.md
 
-Indices and tables
+Indices y tablas
 ==================
 
 * :ref:`genindex`

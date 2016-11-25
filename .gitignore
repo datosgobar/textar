@@ -65,3 +65,5 @@ target/
 # pyenv python configuration file
 .python-version
 20news-bydate.pkz
+Untitled.ipynb
+.ipynb_checkpoints

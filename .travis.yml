@@ -26,4 +26,4 @@ python:
 - '2.7'
 script:
 - nosetests --with-coverage --cover-package=pydatajson
-sudo: false
+sudo: true

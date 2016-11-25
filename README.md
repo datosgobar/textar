@@ -1,6 +1,6 @@
 # Analizador de Textos
 
-[![Coverage Status](https://coveralls.io/repos/datosgobar/textar/badge.svg?branch=master)](https://coveralls.io/r/datosgobar/textar?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/datosgobar/textar/badge.svg?branch=master)](https://coveralls.io/github/datosgobar/textar?branch=master)
 [![Build Status](https://travis-ci.org/datosgobar/textar.svg?branch=master)](https://travis-ci.org/datosgobar/textar)
 [![PyPI](https://badge.fury.io/py/textar.svg)](http://badge.fury.io/py/textar)
 [![Stories in Ready](https://badge.waffle.io/datosgobar/textar.png?label=ready&title=Ready)](https://waffle.io/datosgobar/textar)

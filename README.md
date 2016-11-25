@@ -42,7 +42,7 @@ Paquete en python para análisis, clasificación y recuperación de textos, util
 ### Para desarrollo
 
 ```
-clone http://www.github.com/datosgobar/textar.git
+git clone http://www.github.com/datosgobar/textar.git
 cd path/to/textar
 pip install -e .
 ```

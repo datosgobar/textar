@@ -13,6 +13,9 @@ Paquete en python para análisis, clasificación y recuperación de textos, util
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Instalación](#instalaci%C3%B3n)
+  - [Dependencias](#dependencias)
+  - [Desde pypi](#desde-pypi)
+  - [Para desarrollo](#para-desarrollo)
 - [Uso](#uso)
   - [Búsqueda de textos similares](#b%C3%BAsqueda-de-textos-similares)
   - [Clasificación de textos](#clasificaci%C3%B3n-de-textos)
@@ -26,12 +29,20 @@ Paquete en python para análisis, clasificación y recuperación de textos, util
 
 ## Instalación
 
-Para uso normal: `pip install textar`
+### Dependencias
 
-Para desarrollo:
+`textar` usa `pandas`, `numpy`, `scikit-learn` y `scipy`. Para que funcionen, se requiere instalar algunas dependencias no pythonicas:
+
+* En Ubuntu: `sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran`
+
+### Desde pypi
+
+`pip install textar`
+
+### Para desarrollo
 
 ```
-clone http://www.github.com/datosgobar/textar.git 
+clone http://www.github.com/datosgobar/textar.git
 cd path/to/textar
 pip install -e .
 ```

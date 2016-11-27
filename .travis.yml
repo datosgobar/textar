@@ -24,6 +24,7 @@ matrix:
   - python: '3.4'
   - python: pypy
 python:
+- '2.6'
 - '2.7'
 script:
 - nosetests --with-coverage --cover-package=textar

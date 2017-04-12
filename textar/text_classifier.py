@@ -10,8 +10,8 @@ from __future__ import unicode_literals
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.linear_model import SGDClassifier
-from sklearn.svm import LinearSVC
-from scipy import sparse
+from sklearn.svm import LinearSVC  # No se usa mas Quitar
+from scipy import sparse  # No se usa mas quitar
 import pandas as pd
 import numpy as np
 import os
@@ -168,7 +168,7 @@ class TextClassifier():
         return textvec
 
     def get_similar(self, example, max_similars=3, similarity_cutoff=None,
-                    term_diff_cutoff=0.6):
+                    term_diff_cutoff=0.6, filter_list=None):
         """Devuelve textos similares al ejemplo dentro de los textos entrenados.
 
         Nota:
@@ -186,6 +186,8 @@ class TextClassifier():
                 a la hora de recuperar textos (no afecta el funcionamiento de
                 que textos se consideran cercanos, solo la cantidad de terminos
                 que se devuelven en best_words).
+            filter_list (list): Lista de ids de textos en la cual buscar textos
+                similares.
 
         Returns:
             tuple (list, list, list): (text_ids, sorted_dist, best_words)
@@ -197,13 +199,23 @@ class TextClassifier():
                     palabras mas relevantes que se usaron para seleccionar esa
                     sugerencia.
         """
-        if max_similars > self.term_mat.shape[0]:
+
+        if filter_list:
+            if max_similars > len(filter_list):
+                raise ValueError("No se pueden pedir mas sugerencias que la \
+                                  cantidad de textos en `filter_list`.")
+            else:
+                filt_idx = np.in1d(self.ids, filter_list)
+        elif max_similars > self.term_mat.shape[0]:
             raise ValueError("No se pueden pedir mas sugerencias que la \
                               cantidad de textos que hay almacenados.")
+        else:
+            filt_idx = slice(None)
+
         if example in self.ids:
             index = self.ids == example
             exmpl_vec = self.tfidf_mat[index, :]
-            distances = np.squeeze(pairwise_distances(self.tfidf_mat,
+            distances = np.squeeze(pairwise_distances(self.tfidf_mat[filt_idx],
                                                       exmpl_vec))
             # Pongo la distancia a si mismo como inf, par que no se devuelva a
             # si mismo como una opcion
@@ -211,7 +223,7 @@ class TextClassifier():
         else:
             exmpl_vec = self.vectorizer.transform([example])  # contar terminos
             exmpl_vec = self.transformer.transform(exmpl_vec)  # calcular tfidf
-            distances = np.squeeze(pairwise_distances(self.tfidf_mat,
+            distances = np.squeeze(pairwise_distances(self.tfidf_mat[filt_idx],
                                                       exmpl_vec))
         sorted_indices = np.argsort(distances)
         closest_n = sorted_indices[:max_similars]
@@ -221,19 +233,27 @@ class TextClassifier():
             sorted_dist = sorted_dist[sorted_dist < similarity_cutoff]
         best_words = []
         exmpl_vec = exmpl_vec.toarray()
+        # Calculo palabras relevantes para cada sugerencia
         for suggested in closest_n:
             test_vec = self.tfidf_mat[suggested, :].toarray()
-            differences = np.abs(exmpl_vec - test_vec)**2 / \
-                (exmpl_vec**2 + test_vec**2)
+            differences = np.abs(exmpl_vec - test_vec)**2
+            normalization = exmpl_vec**2 + test_vec**2
+            differences[normalization > 0] = differences[normalization > 0] / \
+                normalization[normalization > 0]
+            differences[normalization == 0] = np.inf
             differences = np.squeeze(np.array(differences))
             sort_I = np.argsort(differences)
-            limit = np.flatnonzero((differences[sort_I] > term_diff_cutoff)
-                                   | (np.isnan(differences[sort_I]))
+            limit = np.flatnonzero((differences[sort_I] > term_diff_cutoff) |
+                                   (np.isnan(differences[sort_I]))
                                    )[0]
             best_words.append([k for k, v in
                                self.vectorizer.vocabulary_.iteritems()
                                if v in sort_I[:limit]])
-        text_ids = self.ids[closest_n]
+        if filter_list:
+            filt_idx_to_general_idx = np.flatnonzero(filt_idx)
+            text_ids = self.ids[filt_idx_to_general_idx[closest_n]]
+        else:
+            text_ids = self.ids[closest_n]
         return list(text_ids), list(sorted_dist), best_words
 
     def reload_texts(self, texts, ids, vocabulary=None):
@@ -307,5 +327,5 @@ class TextClassifier():
             ingresado textos planos en lugar de ids.")
 
     def _check_repeated_ids(self, ids):
-        if length(np.unique(ids)) != length(ids):
+        if len(np.unique(ids)) != len(ids):
             raise ValueError("Hay ids repetidos.")

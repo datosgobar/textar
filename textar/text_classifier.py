@@ -219,7 +219,10 @@ class TextClassifier():
                                                       exmpl_vec))
             # Pongo la distancia a si mismo como inf, par que no se devuelva a
             # si mismo como una opcion
-            distances[index] = np.inf
+            if filter_list and example in filter_list:
+                distances[filter_list.index(example)] = np.inf
+            elif not filter_list:
+                distances[index] = np.inf
         else:
             exmpl_vec = self.vectorizer.transform([example])  # contar terminos
             exmpl_vec = self.transformer.transform(exmpl_vec)  # calcular tfidf

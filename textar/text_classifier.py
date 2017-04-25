@@ -47,7 +47,7 @@ class TextClassifier():
             input='content', encoding=encoding, decode_error='strict',
             strip_accents='ascii', lowercase=True, preprocessor=None,
             tokenizer=None, stop_words=es_stopwords, ngram_range=(1, 1),
-            analyzer='word', max_df=1.0, min_df=1, max_features=None,
+            analyzer='word', max_df=0.8, min_df=1, max_features=None,
             vocabulary=vocabulary, binary=False)
 
         self.transformer = TfidfTransformer()
@@ -168,7 +168,7 @@ class TextClassifier():
         return textvec
 
     def get_similar(self, example, max_similars=3, similarity_cutoff=None,
-                    term_diff_cutoff=0.6, filter_list=None):
+                    term_diff_max_rank=10, filter_list=None):
         """Devuelve textos similares al ejemplo dentro de los textos entrenados.
 
         Nota:
@@ -181,7 +181,7 @@ class TextClassifier():
                 devolver.
             similarity_cutoff (float, optional): Valor umbral de similaridad
                 para definir que dos textos son similares entre si.
-            term_diff_cutoff (float, optional): Este valor sirve para controlar
+            term_diff_max_rank (int, optional): Este valor sirve para controlar
                 el umbral con el que los terminos son considerados importantes
                 a la hora de recuperar textos (no afecta el funcionamiento de
                 que textos se consideran cercanos, solo la cantidad de terminos
@@ -235,23 +235,17 @@ class TextClassifier():
             closest_n = closest_n[sorted_dist < similarity_cutoff]
             sorted_dist = sorted_dist[sorted_dist < similarity_cutoff]
         best_words = []
-        exmpl_vec = exmpl_vec.toarray()
         # Calculo palabras relevantes para cada sugerencia
         for suggested in closest_n:
-            test_vec = self.tfidf_mat[suggested, :].toarray()
-            differences = np.abs(exmpl_vec - test_vec)**2
-            normalization = exmpl_vec**2 + test_vec**2
-            differences[normalization > 0] = differences[normalization > 0] / \
-                normalization[normalization > 0]
-            differences[normalization == 0] = np.inf
-            differences = np.squeeze(np.array(differences))
-            sort_I = np.argsort(differences)
-            limit = np.flatnonzero((differences[sort_I] > term_diff_cutoff) |
-                                   (np.isnan(differences[sort_I]))
-                                   )[0]
+            best_example = np.squeeze(exmpl_vec.toarray())
+            best_example = np.flipud(
+                np.argsort(best_example))[:term_diff_max_rank]
+            test_vec = np.squeeze(self.tfidf_mat[suggested, :].toarray())
+            best_test = np.flipud(np.argsort(test_vec))[:term_diff_max_rank]
+            best_words_ids = np.intersect1d(best_example, best_test)
             best_words.append([k for k, v in
                                self.vectorizer.vocabulary_.iteritems()
-                               if v in sort_I[:limit]])
+                               if v in best_words_ids])
         if filter_list:
             filt_idx_to_general_idx = np.flatnonzero(filt_idx)
             text_ids = self.ids[filt_idx_to_general_idx[closest_n]]

@@ -67,3 +67,4 @@ target/
 20news-bydate.pkz
 Untitled.ipynb
 .ipynb_checkpoints
+.DS_Store

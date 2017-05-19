@@ -244,7 +244,7 @@ class TextClassifier():
             best_test = np.flipud(np.argsort(test_vec))[:term_diff_max_rank]
             best_words_ids = np.intersect1d(best_example, best_test)
             best_words.append([k for k, v in
-                               self.vectorizer.vocabulary_.iteritems()
+                               self.vectorizer.vocabulary_.items()
                                if v in best_words_ids])
         if filter_list:
             filt_idx_to_general_idx = np.flatnonzero(filt_idx)

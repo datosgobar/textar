@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 u"""Módulo de clasificación de textos.
 
 Este módulo contiene a los objetos que permiten entrenar un clasificador
@@ -10,8 +9,6 @@ from __future__ import unicode_literals
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.linear_model import SGDClassifier
-from sklearn.svm import LinearSVC  # No se usa mas Quitar
-from scipy import sparse  # No se usa mas quitar
 import pandas as pd
 import numpy as np
 import os
@@ -103,7 +100,7 @@ class TextClassifier():
         except AttributeError:
             raise AttributeError("No hay ningun clasificador con ese nombre.")
         indices = np.in1d(self.ids, ids)
-        if isinstance(labels, basestring):
+        if isinstance(labels, str):
             labels = [labels]
         classifier.partial_fit(self.tfidf_mat[indices, :], labels)
 
@@ -147,7 +144,7 @@ class TextClassifier():
                 El tamaño de la matriz es de (N, T) donde N es la cantidad de
                 ejemplos y T es la cantidad de términos en el vocabulario.
         """
-        if isinstance(examples, basestring):
+        if isinstance(examples, str):
             if examples in self.ids:
                 textvec = self.tfidf_mat[self.ids == examples, :]
             else:
@@ -244,7 +241,7 @@ class TextClassifier():
             best_test = np.flipud(np.argsort(test_vec))[:term_diff_max_rank]
             best_words_ids = np.intersect1d(best_example, best_test)
             best_words.append([k for k, v in
-                               self.vectorizer.vocabulary_.iteritems()
+                               self.vectorizer.vocabulary_.items()
                                if v in best_words_ids])
         if filter_list:
             filt_idx_to_general_idx = np.flatnonzero(filt_idx)

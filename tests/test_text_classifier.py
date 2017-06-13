@@ -11,10 +11,9 @@ import sys
 import os
 import codecs
 import numpy as np
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_20newsgroups
 sys.path.insert(0, os.path.abspath('..'))
-
 from textar import TextClassifier
 
 

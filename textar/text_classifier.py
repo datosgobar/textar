@@ -206,12 +206,15 @@ class TextClassifier():
                                   cantidad de textos en `filter_list`.")
             else:
                 filt_idx = np.in1d(self.ids, filter_list)
+
         elif max_similars > self.term_mat.shape[0]:
             raise ValueError("No se pueden pedir mas sugerencias que la \
                               cantidad de textos que hay almacenados.")
         else:
-            filt_idx = slice(None)
-
+            filt_idx = np.ones(len(self.ids), dtype=bool)
+        # Saco los textos compuestos solo por stop_words
+        good_ids = np.array(np.sum(self.term_mat, 1) > 0).squeeze()
+        filt_idx = filt_idx & good_ids
         if example in self.ids:
             index = self.ids == example
             exmpl_vec = self.tfidf_mat[index, :]
@@ -222,12 +225,17 @@ class TextClassifier():
             if filter_list and example in filter_list:
                 distances[filter_list.index(example)] = np.inf
             elif not filter_list:
-                distances[index] = np.inf
+                idx_example = np.searchsorted(self.ids, example)
+                filt_idx_example = np.searchsorted(np.flatnonzero(filt_idx),
+                                                   idx_example)
+                distances[filt_idx_example] = np.inf
         else:
             exmpl_vec = self.vectorizer.transform([example])  # contar terminos
             exmpl_vec = self.transformer.transform(exmpl_vec)  # calcular tfidf
             distances = np.squeeze(pairwise_distances(self.tfidf_mat[filt_idx],
                                                       exmpl_vec))
+        if np.sum(exmpl_vec) == 0:
+            return [], [], []
         sorted_indices = np.argsort(distances)
         closest_n = sorted_indices[:max_similars]
         sorted_dist = distances[closest_n]
@@ -236,12 +244,16 @@ class TextClassifier():
             sorted_dist = sorted_dist[sorted_dist < similarity_cutoff]
         best_words = []
         # Calculo palabras relevantes para cada sugerencia
+        best_example = np.squeeze(exmpl_vec.toarray())
+        sorted_example_weights = np.flipud(np.argsort(best_example))
+        truncated_max_rank = min(term_diff_max_rank, np.sum(best_example > 0))
+        best_example = sorted_example_weights[:truncated_max_rank]
         for suggested in closest_n:
-            best_example = np.squeeze(exmpl_vec.toarray())
-            best_example = np.flipud(
-                np.argsort(best_example))[:term_diff_max_rank]
             test_vec = np.squeeze(self.tfidf_mat[suggested, :].toarray())
-            best_test = np.flipud(np.argsort(test_vec))[:term_diff_max_rank]
+            sorted_test_weights = np.flipud(np.argsort(test_vec))
+            truncated_max_rank = min(term_diff_max_rank,
+                                     np.sum(test_vec > 0))
+            best_test = sorted_test_weights[:truncated_max_rank]
             best_words_ids = np.intersect1d(best_example, best_test)
             best_words.append([k for k, v in
                                self.vectorizer.vocabulary_.items()

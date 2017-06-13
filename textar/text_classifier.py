@@ -165,7 +165,8 @@ class TextClassifier():
         return textvec
 
     def get_similar(self, example, max_similars=3, similarity_cutoff=None,
-                    term_diff_max_rank=10, filter_list=None):
+                    term_diff_max_rank=10, filter_list=None,
+                    term_diff_cutoff=None):
         """Devuelve textos similares al ejemplo dentro de los textos entrenados.
 
         Nota:
@@ -185,6 +186,7 @@ class TextClassifier():
                 que se devuelven en best_words).
             filter_list (list): Lista de ids de textos en la cual buscar textos
                 similares.
+            term_diff_cutoff (float): Deprecado. Se quitara en el futuro.
 
         Returns:
             tuple (list, list, list): (text_ids, sorted_dist, best_words)
@@ -197,6 +199,9 @@ class TextClassifier():
                     sugerencia.
         """
 
+        if term_diff_cutoff:
+            warnings.warn('Deprecado. Quedo sin uso. Se quitara en el futuro.',
+                          DeprecationWarning)
         if filter_list:
             if max_similars > len(filter_list):
                 raise ValueError("No se pueden pedir mas sugerencias que la \

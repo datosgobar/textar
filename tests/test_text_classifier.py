@@ -32,7 +32,7 @@ class TextClassifierTestCase(unittest.TestCase):
                 "El edificio más antiguo tiene muchas cuadros caros porque era de un multimillonario",
                 "El edificio más moderno tiene muchas programadoras que comen manzanas durante el almuerzo grupal"
             ],
-            ids=map(str, range(4))
+            ids=list(map(str, range(4)))
         )
 
         ids, distancias, palabras_comunes = tc.get_similar(
@@ -42,10 +42,14 @@ class TextClassifierTestCase(unittest.TestCase):
 
         self.assertEqual(ids, ['0', '3', '2', '1'])
         self.assertEqual(
-            palabras_comunes,
+            [
+                sorted(palabras)
+                for palabras in palabras_comunes
+            ]
+            ,
             [
                 [u'edificio', u'manzanas'],
-                [u'edificio', u'muchas', u'manzanas'],
+                [u'edificio', u'manzanas', u'muchas'],
                 [u'edificio', u'muchas'], [u'muchas']
             ]
         )
@@ -60,13 +64,13 @@ class TextClassifierTestCase(unittest.TestCase):
                 "Para hacer una torta de naranja se necesita harina, huevos, leche, ralladura de naranja y polvo de hornear",
                 "Para hacer un lemon pie se necesita crema, ralladura de limón, huevos, leche y harina"
             ],
-            ids=map(str, range(6))
+            ids=list(map(str, range(6)))
         )
 
         # entrena un clasificador
         tc.make_classifier(
             name="recetas_classifier",
-            ids=map(str, range(6)),
+            ids=list(map(str, range(6))),
             labels=["Comida", "Comida", "Trago", "Trago", "Postre", "Postre"]
         )
 

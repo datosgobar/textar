@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 u"""Módulo de clasificación de textos.
 
 Este módulo contiene a los objetos que permiten entrenar un clasificador

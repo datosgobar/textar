@@ -1,13 +1,21 @@
 History
 ===
 
-0.0.1 (2016-11-22)
+
+0.0.5 (2017-07-14)
 ------------------
 
-* First release on PyPI.
+* Mejoras en la forma en que se seleccionan las palabras destacadas de la busqueda
+* Correcciones a los tests correspondientes
 
 0.0.4 (2016-11-25)
 ------------------
 
 * Correcciones a los tests
 * Revisión de la documentación
+
+0.0.1 (2016-11-22)
+------------------
+
+* First release on PyPI.
+

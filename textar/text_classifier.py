@@ -219,6 +219,7 @@ class TextClassifier():
         # Saco los textos compuestos solo por stop_words
         good_ids = np.array(np.sum(self.term_mat, 1) > 0).squeeze()
         filt_idx = filt_idx & good_ids
+        filt_idx_to_general_idx = np.flatnonzero(filt_idx)
         if example in self.ids:
             index = self.ids == example
             exmpl_vec = self.tfidf_mat[index, :]
@@ -247,23 +248,26 @@ class TextClassifier():
             closest_n = closest_n[sorted_dist < similarity_cutoff]
             sorted_dist = sorted_dist[sorted_dist < similarity_cutoff]
         best_words = []
+
         # Calculo palabras relevantes para cada sugerencia
         best_example = np.squeeze(exmpl_vec.toarray())
         sorted_example_weights = np.flipud(np.argsort(best_example))
         truncated_max_rank = min(term_diff_max_rank, np.sum(best_example > 0))
-        best_example = sorted_example_weights[:truncated_max_rank]
+        best_example_words = sorted_example_weights[:truncated_max_rank]
         for suggested in closest_n:
-            test_vec = np.squeeze(self.tfidf_mat[suggested, :].toarray())
+            suggested_idx = filt_idx_to_general_idx[suggested]
+            test_vec = np.squeeze(self.tfidf_mat[suggested_idx, :].toarray())
             sorted_test_weights = np.flipud(np.argsort(test_vec))
             truncated_max_rank = min(term_diff_max_rank,
                                      np.sum(test_vec > 0))
             best_test = sorted_test_weights[:truncated_max_rank]
-            best_words_ids = np.intersect1d(best_example, best_test)
+            best_words_ids = np.intersect1d(best_example_words, best_test)
             best_words.append([k for k, v in
                                self.vectorizer.vocabulary_.items()
                                if v in best_words_ids])
+
+        # Filtro dentro de las buscadas
         if filter_list:
-            filt_idx_to_general_idx = np.flatnonzero(filt_idx)
             text_ids = self.ids[filt_idx_to_general_idx[closest_n]]
         else:
             text_ids = self.ids[closest_n]

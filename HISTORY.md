@@ -1,6 +1,11 @@
 History
 ===
 
+0.0.6 (2017-09-25)
+------------------
+
+* Arreglo de bugs en las palabras destacadas de los resultados sugeridos.
+
 
 0.0.5 (2017-07-14)
 ------------------
@@ -18,4 +23,3 @@ History
 ------------------
 
 * First release on PyPI.
-

@@ -41,7 +41,7 @@ Paquete en python para análisis, clasificación y recuperación de textos, util
 ### Para desarrollo
 
 ```
-git clone http://www.github.com/datosgobar/textar.git
+git clone https://www.github.com/datosgobar/textar.git
 cd path/to/textar
 pip install -e .
 ```
@@ -59,7 +59,7 @@ tc = TextClassifier(
     texts=[
         "El árbol del edificio moderno tiene manzanas",
         "El árbol más chico tiene muchas mandarinas naranjas, y está cerca del monumento antiguo",
-        "El edificio más antiguo tiene muchas cuadros caros porque era de un multimillonario",
+        "El edificio más antiguo tiene muchos cuadros caros porque era de un multimillonario",
         "El edificio más moderno tiene muchas programadoras que comen manzanas durante el almuerzo grupal"
     ],
     ids=map(str, range(4))
@@ -148,6 +148,6 @@ y correr los tests:
 
 ## Contacto
 
-Te invitamos a [crearnos un issue](https://github.com/datosgobar/textar/issues/new?title=Encontre un bug en textar) en caso de que encuentres algún bug o tengas feedback de alguna parte de `textar`.
+Te invitamos a [crearnos un issue](https://github.com/datosgobar/textar/issues/new?title=Encontré un bug en textar) en caso de que encuentres algún bug o tengas feedback de alguna parte de `textar`.
 
 Para todo lo demás, podés mandarnos tu comentario o consulta a [datos@modernizacion.gob.ar](mailto:datos@modernizacion.gob.ar).

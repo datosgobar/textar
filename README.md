@@ -62,7 +62,7 @@ tc = TextClassifier(
         "El edificio más antiguo tiene muchos cuadros caros porque era de un multimillonario",
         "El edificio más moderno tiene muchas programadoras que comen manzanas durante el almuerzo grupal"
     ],
-    ids=map(str, range(4))
+    ids=list(map(str, range(4)))
 )
 
 ids, distancias, palabras_comunes = tc.get_similar(

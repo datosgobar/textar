@@ -20,10 +20,9 @@ install:
 language: python
 matrix:
   allow_failures:
-  - python: '3.5'
+  - python: '3.6'
 python:
-- '2.7'
-- '3.5'
+- '3.7'
 script:
 - nosetests --with-coverage --cover-package=textar
 # - make docs

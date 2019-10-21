@@ -94,13 +94,13 @@ tc = TextClassifier(
         "Para hacer una torta de naranja se necesita harina, huevos, leche, ralladura de naranja y polvo de hornear",
         "Para hacer un lemon pie se necesita crema, ralladura de limón, huevos, leche y harina"
     ],
-    ids=map(str, range(6))
+    ids=list(map(str, range(6)))
 )
 
 # entrena un clasificador
 tc.make_classifier(
     name="recetas_classifier",
-    ids=map(str, range(6)),
+    ids=list(map(str, range(6))),
     labels=["Comida", "Comida", "Trago", "Trago", "Postre", "Postre"]
 )
 
